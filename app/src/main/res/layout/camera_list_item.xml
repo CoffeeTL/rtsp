@@ -4,10 +4,7 @@
     android:orientation="vertical"
     android:id="@+id/camera_list_item_main"
     android:background="@drawable/camera_tag_style"
-    android:layout_marginBottom="9dp"
-    android:layout_marginLeft="18dp"
-    android:layout_marginRight="18dp"
-    android:layout_marginTop="18dp"
+    android:layout_marginTop="9dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <ImageView
@@ -23,8 +20,6 @@
         android:maxLines="2"
         android:ellipsize="end"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="9dp"
-        android:layout_marginBottom="9dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

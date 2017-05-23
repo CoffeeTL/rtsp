@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.CameraAddActivity" android:screenOrientation="landscape" android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".view.activity.CameraAddActivity" android:screenOrientation="landscape" android:windowSoftInputMode="adjustResize|stateVisible"/>
         <activity android:name=".view.activity.CameraPlayActivity" android:screenOrientation="landscape"/>
     </application>
 

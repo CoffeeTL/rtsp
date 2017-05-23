@@ -40,6 +40,7 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
     //private CameraListAdapter listAdapter;
     private TagFlowLayout flowLayout;
     private int current_index = -1;
+    private boolean isSelected;
     private List<CameraModle> modleList;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,7 +52,18 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
         flowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
-                current_index = position;
+                if(position == current_index){
+                    if(!isSelected){
+                        current_index = position;
+                        isSelected = true;
+                    }else{
+                        current_index = -1;
+                        isSelected = false;
+                    }
+                }else{
+                    current_index = position;
+                    isSelected = true;
+                }
                 return true;
             }
         });
@@ -80,15 +92,14 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
                 if(current_index > -1){
                     AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                     dialog.setTitle(R.string.dialog_title);
-                    dialog.setMessage("确定要删除选中摄像头吗?");
+                    dialog.setMessage("确定要删除选中摄像头 "+modleList.get(current_index).getCamera_name()+" 吗?");
                     dialog.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
-                    dialog.setPositiveButton("确定", new DialogInterface.OnClickListener(){
-
+                    dialog.setPositiveButton(R.string.dialog_sure, new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -100,7 +111,7 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
                     });
                     dialog.show();
                 }else{
-                    Toast.makeText(this,"请选中一个摄像头",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,R.string.no_camera_hint,Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -108,7 +119,7 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
                 if(current_index > -1){
                     CameraPlayActivity.startPage(this,current_index);
                 }else{
-                    Toast.makeText(this,"请选中一个摄像头",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,R.string.no_camera_hint,Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -116,12 +127,10 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
 
     private void refresh() {
         flowLayout.setAdapter(new TagAdapter<CameraModle>(modleList) {
-
             @Override
             public View getView(FlowLayout parent, int position, CameraModle s) {
                 View tv =  LayoutInflater.from(CameraListActivity.this)
-                        .inflate(R.layout.camera_list_item,
-                                flowLayout, false);
+                        .inflate(R.layout.camera_list_item, flowLayout, false);
                 TextView name = (TextView) tv.findViewById(R.id.camera_list_item_name);
                 name.setText(modleList.get(position).getCamera_name());
                 LinearLayout main = (LinearLayout) tv.findViewById(R.id.camera_list_item_main);
@@ -134,11 +143,9 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    //private List<CameraInfoModle> infoList;
     @Override
     protected void onResume() {
         super.onResume();
-        //modleList = CameraData.getInstance().with(this).getDatas();
         modleList = CameraManager.getInstance().with(this).using(cacheId).getDatas();
         if(modleList !=null  && modleList.size() != 0){
             for (CameraModle infoModle : modleList) {

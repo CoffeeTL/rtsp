@@ -123,7 +123,6 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
     private void startPlay(int current_index) {
         name_label.setText(modleList.get(current_index).getCamera_name());
         task = new TimerTask(){
-
             @Override
             public void run() {
                 Message msg = handler.obtainMessage();

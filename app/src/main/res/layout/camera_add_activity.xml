@@ -1,131 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@color/white"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/camera_add_activity_editroom"
+        android:orientation="horizontal"
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
         <LinearLayout
-            android:id="@+id/camera_add_activity_editroom"
+            android:id="@+id/camera_add_activity_lefteditroom"
             android:orientation="vertical"
-            android:layout_weight="4"
-            android:layout_width="match_parent"
-            android:layout_height="0dp">
-            <RelativeLayout
-                android:id="@+id/camera_add_activity_editroom_nameroom"
-                android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/camera_add_activity_name_editLayout"
+                app:hintTextAppearance="@style/text_input_style"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/text_input_style"
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
-                <TextView
-                    android:id="@+id/camera_add_activity_editroom_nameroom_label"
-                    style="@style/add_label_style"
-                    android:text="@string/add_name_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <EditText
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/camera_add_activity_editroom_nameroom_edit"
-                    android:layout_marginLeft="100dp"
-                    android:layout_marginRight="18dp"
-                    android:background="@drawable/add_edit_style"
                     android:maxLines="1"
-                    android:layout_marginTop="9dp"
-                    android:layout_marginBottom="9dp"
                     android:layout_centerVertical="true"
-                    android:padding="9dp"
-                    android:hint="@string/add_edit_name_hint"
+                    android:hint="@string/add_name_label"
                     android:textSize="16sp"
                     android:textColor="@color/black_565656"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/camera_add_activity_editroom_iproom"
-                android:layout_weight="1"
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/camera_add_activity_port_editLayout"
+                app:hintTextAppearance="@style/text_input_style"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/text_input_style"
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
-                <TextView
-                    android:id="@+id/camera_add_activity_editroom_iproom_label"
-                    style="@style/add_label_style"
-                    android:text="@string/add_IP_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <EditText
-                    android:id="@+id/camera_add_activity_editroom_iproom_edit"
-                    android:layout_marginLeft="100dp"
-                    android:layout_marginRight="18dp"
-                    android:background="@drawable/add_edit_style"
-                    android:layout_centerVertical="true"
-                    android:padding="9dp"
-                    android:hint="@string/add_edit_ip_hint"
-                    android:textSize="16sp"
-                    android:textColor="@color/black_565656"
-                    android:textCursorDrawable="@color/black_565656"
-                    android:maxLines="1"
-                    android:layout_marginTop="9dp"
-                    android:layout_marginBottom="9dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/camera_add_activity_editroom_portroom"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="0dp">
-                <TextView
-                    android:id="@+id/camera_add_activity_editroom_portroom_label"
-                    style="@style/add_label_style"
-                    android:text="@string/add_port_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <EditText
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/camera_add_activity_editroom_portroom_edit"
-                    android:layout_marginLeft="100dp"
-                    android:layout_marginRight="18dp"
-                    android:background="@drawable/add_edit_style"
                     android:layout_centerVertical="true"
-                    android:padding="9dp"
-                    android:hint="@string/add_edit_port_hint"
+                    android:hint="@string/add_port_label"
                     android:inputType="number"
                     android:textSize="16sp"
                     android:textColor="@color/black_565656"
-                    android:textCursorDrawable="@color/black_565656"
                     android:maxLines="1"
-                    android:layout_marginTop="9dp"
-                    android:layout_marginBottom="9dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/camera_add_activity_editroom_backstringroom"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="0dp">
-                <TextView
-                    android:id="@+id/camera_add_activity_editroom_backstringroom_label"
-                    style="@style/add_label_style"
-                    android:text="@string/add_backstring_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <EditText
-                    android:id="@+id/camera_add_activity_editroom_backstringoom_edit"
-                    android:layout_marginLeft="100dp"
-                    android:layout_marginRight="18dp"
-                    android:background="@drawable/add_edit_style"
-                    android:layout_centerVertical="true"
-                    android:padding="9dp"
-                    android:hint="@string/add_edit_backstring_hint"
-                    android:textSize="16sp"
-                    android:textColor="@color/black_565656"
-                    android:textCursorDrawable="@color/black_565656"
-                    android:maxLines="1"
-                    android:layout_marginTop="9dp"
-                    android:layout_marginBottom="9dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </RelativeLayout>
 
+            </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/camera_add_activity_righteditroom"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/camera_add_activity_ip_editLayout"
+                app:hintTextAppearance="@style/text_input_style"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/text_input_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/camera_add_activity_editroom_iproom_edit"
+                    android:layout_centerVertical="true"
+                    android:hint="@string/add_IP_label"
+                    android:textSize="16sp"
+                    android:textColor="@color/black_565656"
+                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/camera_add_activity_backstring_editLayout"
+                app:hintTextAppearance="@style/text_input_style"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/text_input_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/camera_add_activity_editroom_backstringoom_edit"
+                    android:layout_centerVertical="true"
+                    android:hint="@string/add_backstring_label"
+                    android:textSize="16sp"
+                    android:textColor="@color/black_565656"
+                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/camera_add_activity_editroom"-->
+            <!--android:layout_weight="2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp">-->
+            <!--<RelativeLayout-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:id="@+id/camera_add_activity_name_editLayout"-->
+                    <!--app:hintTextAppearance="@style/text_input_style"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+                    <!--<android.support.design.widget.TextInputEditText-->
+                        <!--android:id="@+id/camera_add_activity_editroom_nameroom_edit"-->
+                        <!--android:maxLines="1"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:hint="@string/add_name_label"-->
+                        <!--android:textSize="16sp"-->
+                        <!--android:textColor="@color/black_565656"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"/>-->
+
+                <!--</android.support.design.widget.TextInputLayout>-->
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:id="@+id/camera_add_activity_ip_editLayout"-->
+                    <!--app:hintTextAppearance="@style/text_input_style"-->
+                    <!--app:errorEnabled="true"-->
+                    <!--app:errorTextAppearance="@style/text_input_style"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+                    <!--<android.support.design.widget.TextInputEditText-->
+                        <!--android:id="@+id/camera_add_activity_editroom_iproom_edit"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:hint="@string/add_IP_label"-->
+                        <!--android:textSize="16sp"-->
+                        <!--android:textColor="@color/black_565656"-->
+                        <!--android:maxLines="1"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"/>-->
+
+                <!--</android.support.design.widget.TextInputLayout>-->
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:id="@+id/camera_add_activity_port_editLayout"-->
+                    <!--app:hintTextAppearance="@style/text_input_style"-->
+                    <!--android:layout_below="@+id/camera_add_activity_name_editLayout"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+                    <!--<android.support.design.widget.TextInputEditText-->
+                        <!--android:id="@+id/camera_add_activity_editroom_portroom_edit"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:hint="@string/add_port_label"-->
+                        <!--android:inputType="number"-->
+                        <!--android:textSize="16sp"-->
+                        <!--android:textColor="@color/black_565656"-->
+                        <!--android:maxLines="1"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"/>-->
+
+                <!--</android.support.design.widget.TextInputLayout>-->
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:id="@+id/camera_add_activity_backstring_editLayout"-->
+                    <!--android:layout_below="@+id/camera_add_activity_name_editLayout"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+                    <!--<android.support.design.widget.TextInputEditText-->
+                        <!--android:id="@+id/camera_add_activity_editroom_backstringoom_edit"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:hint="@string/add_backstring_label"-->
+                        <!--android:textSize="16sp"-->
+                        <!--android:textColor="@color/black_565656"-->
+                        <!--android:maxLines="1"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"/>-->
+
+                <!--</android.support.design.widget.TextInputLayout>-->
+
+            <!--</RelativeLayout>-->
+
+        <!--</RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/camera_add_activity_btnroom"

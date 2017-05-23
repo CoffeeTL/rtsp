@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/btn_frameAndText_color</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
@@ -29,6 +30,10 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_marginLeft">18dp</item>
+    </style>
+    <style name="text_input_style">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/btn_frameAndText_color</item>
     </style>
 
 </resources>
