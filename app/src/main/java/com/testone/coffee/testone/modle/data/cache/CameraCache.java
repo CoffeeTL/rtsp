@@ -1,5 +1,6 @@
 package com.testone.coffee.testone.modle.data.cache;
 
+import com.testone.coffee.testone.modle.CameraInfoModle;
 import com.testone.coffee.testone.modle.CameraModle;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  */
 
 public abstract class CameraCache {
-    public abstract void add(CameraModle modle);
-    public abstract List<CameraModle> findAll();
+    public abstract void add(CameraInfoModle modle);
+    public abstract List<CameraInfoModle> findAll();
     public abstract void deleteSingle(String url);
 }

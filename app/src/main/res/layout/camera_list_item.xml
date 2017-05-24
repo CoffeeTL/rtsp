@@ -1,27 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:id="@+id/camera_list_item_main"
     android:background="@drawable/camera_tag_style"
-    android:layout_marginTop="9dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
-    <ImageView
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="18dp"
-        android:src="@mipmap/camera"
+    <RelativeLayout
+        android:id="@+id/camera_list_item_clickroom"
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/camera_list_item_name"
-        android:textColor="@color/black_565656"
-        android:textSize="16sp"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/camera_list_item_icon"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp"
+            android:src="@mipmap/camera"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+        <TextView
+            android:id="@+id/camera_list_item_name"
+            android:textColor="@color/black_565656"
+            android:textSize="20dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/camera_list_item_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/camera_list_item_ip"
+            android:textColor="@color/gray_787878"
+            android:textSize="17dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/camera_list_item_name"
+            android:layout_marginTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-</LinearLayout>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/camera_list_item_del"
+        android:src="@mipmap/pwd_del"
+        android:layout_alignTop="@+id/camera_list_item_clickroom"
+        android:layout_alignRight="@+id/camera_list_item_clickroom"
+        android:visibility="gone"
+        android:layout_width="35dp"
+        android:layout_height="35dp"/>
+
+
+</RelativeLayout>
 

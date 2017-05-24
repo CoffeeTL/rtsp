@@ -9,7 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -18,11 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.testone.coffee.testone.R;
+import com.testone.coffee.testone.RtspApplication;
+import com.testone.coffee.testone.constant.RtspAddressConstant;
 import com.testone.coffee.testone.modle.CameraInfoModle;
 import com.testone.coffee.testone.modle.CameraModle;
 import com.testone.coffee.testone.modle.data.CameraManager;
 import com.testone.coffee.testone.utils.DensityUtil;
 import com.testone.coffee.testone.utils.RexUtils;
+import com.testone.coffee.testone.utils.TextSizeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,22 +40,21 @@ import java.util.List;
 
 public class CameraAddActivity extends BaseActivity implements View.OnClickListener{
     private static int MARGIN_DIP = 10;
-    private TextInputEditText edit_name;
-    private TextInputEditText edit_ipAddress;
-    private TextInputEditText edit_port;
-    private TextInputEditText edit_backString;
-    private TextInputLayout name_edit_layout;
-    private TextInputLayout ip_edit_layout;
-    private TextInputLayout port_edit_layout;
-    private TextInputLayout backstring_edit_layout;
+    private EditText edit_name;
+    private EditText edit_ipAddress;
+    private EditText edit_port;
+    private EditText edit_backString;
+    private RelativeLayout name_edit_layout;
+    private RelativeLayout ip_edit_layout;
+    private RelativeLayout port_edit_layout;
+    private RelativeLayout backstring_edit_layout;
     private LinearLayout.LayoutParams name_layout_params;
     private LinearLayout.LayoutParams ip_layout_params;
     private LinearLayout.LayoutParams port_layout_params;
     private LinearLayout.LayoutParams backstring_layout_params;
     private TextView save_btn;
-    private TextView cancel_btn;
-    private List<CameraInfoModle> infoList;
-    private List<TextInputLayout> layoutList;
+    private View back_btn;
+    private List<RelativeLayout> layoutList;
     private List<LinearLayout.LayoutParams> paramsList;
     public static void startPage(Context context){
         Intent intent = new Intent(context,CameraAddActivity.class);
@@ -59,13 +64,35 @@ public class CameraAddActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bindView();
+        initView();
         setParams();
-        cancel_btn.setOnClickListener(this);
+        back_btn.setOnClickListener(this);
         save_btn.setOnClickListener(this);
-        if(infoList == null){
-            infoList = new ArrayList<>();
-        }
     }
+
+    private void initView() {
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (TextView) findViewById(R.id.camera_add_activity_title),TextSizeUtils.DEFAULT_MAX_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (TextView) findViewById(R.id.camera_add_activity_name_editLayout_label),TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (TextView) findViewById(R.id.camera_add_activity_ip_editLayout_label),TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (TextView) findViewById(R.id.camera_add_activity_port_editLayout_label),TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (TextView) findViewById(R.id.camera_add_activity_backString_editLayout_label),TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,save_btn,TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (EditText) findViewById(R.id.camera_add_activity_name_editLayout_edit),TextSizeUtils.DEFAULT_MIN_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (EditText) findViewById(R.id.camera_add_activity_ip_editLayout_edit),TextSizeUtils.DEFAULT_MIN_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (EditText) findViewById(R.id.camera_add_activity_port_editLayout_edit),TextSizeUtils.DEFAULT_MIN_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (EditText) findViewById(R.id.camera_add_activity_backString_editLayout_edit),TextSizeUtils.DEFAULT_MIN_SIZE);
+    }
+
     private int screenWidth;
     private int screenHeight;
     private void setParams() {
@@ -90,20 +117,20 @@ public class CameraAddActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void bindView() {
-        edit_name = (TextInputEditText) findViewById(R.id.camera_add_activity_editroom_nameroom_edit);
-        edit_ipAddress = (TextInputEditText) findViewById(R.id.camera_add_activity_editroom_iproom_edit);
-        edit_port = (TextInputEditText) findViewById(R.id.camera_add_activity_editroom_portroom_edit);
-        edit_backString = (TextInputEditText) findViewById(R.id.camera_add_activity_editroom_backstringoom_edit);
-        name_edit_layout = (TextInputLayout) findViewById(R.id.camera_add_activity_name_editLayout);
-        ip_edit_layout = (TextInputLayout) findViewById(R.id.camera_add_activity_ip_editLayout);
-        port_edit_layout = (TextInputLayout) findViewById(R.id.camera_add_activity_port_editLayout);
-        backstring_edit_layout = (TextInputLayout) findViewById(R.id.camera_add_activity_backstring_editLayout);
+        edit_name = (EditText) findViewById(R.id.camera_add_activity_name_editLayout_edit);
+        edit_ipAddress = (EditText) findViewById(R.id.camera_add_activity_ip_editLayout_edit);
+        edit_port = (EditText) findViewById(R.id.camera_add_activity_port_editLayout_edit);
+        edit_backString = (EditText) findViewById(R.id.camera_add_activity_backString_editLayout_edit);
+        name_edit_layout = (RelativeLayout) findViewById(R.id.camera_add_activity_name_editLayout);
+        ip_edit_layout = (RelativeLayout) findViewById(R.id.camera_add_activity_ip_editLayout);
+        port_edit_layout = (RelativeLayout) findViewById(R.id.camera_add_activity_port_editLayout);
+        backstring_edit_layout = (RelativeLayout) findViewById(R.id.camera_add_activity_backString_editLayout);
         name_layout_params = (LinearLayout.LayoutParams) name_edit_layout.getLayoutParams();
         ip_layout_params = (LinearLayout.LayoutParams) ip_edit_layout.getLayoutParams();
         port_layout_params = (LinearLayout.LayoutParams) port_edit_layout.getLayoutParams();
         backstring_layout_params = (LinearLayout.LayoutParams) backstring_edit_layout.getLayoutParams();
         save_btn = (TextView) findViewById(R.id.camera_add_activity_btnroom_savebtn);
-        cancel_btn = (TextView) findViewById(R.id.camera_add_activity_btnroom_cancelbtn);
+        back_btn = findViewById(R.id.camera_add_activity_backroom);
     }
 
     @Override
@@ -117,30 +144,21 @@ public class CameraAddActivity extends BaseActivity implements View.OnClickListe
             case R.id.camera_add_activity_btnroom_savebtn:
                 saveCameraInfo();
                 break;
-            case R.id.camera_add_activity_btnroom_cancelbtn:
+            case R.id.camera_add_activity_backroom:
                 finish();
                 break;
+
         }
     }
 
     private void saveCameraInfo() {
-        if(TextUtils.equals("",edit_name.getText().toString()) ||
-                TextUtils.equals("",edit_ipAddress.getText().toString()) ||
-                TextUtils.equals("",edit_backString.getText().toString())){
-            Toast.makeText(this,R.string.add_edit_emptyinfo_error_hint,Toast.LENGTH_SHORT).show();
-        }else if(!RexUtils.isTrueIP(edit_ipAddress.getText().toString())){
-            //Toast.makeText(this,R.string.wrong_edit_info_error_hint,Toast.LENGTH_SHORT).show();
-            edit_ipAddress.requestFocus();
-            edit_ipAddress.setError("您填的IP地址不正确");
-
+        if(!RexUtils.isTrueIP(edit_ipAddress.getText().toString())){
+           Toast.makeText(this,RtspAddressConstant.WRONG_IP_ADDRESS,Toast.LENGTH_SHORT).show();
         }else{
-            CameraInfoModle infoModle = new CameraInfoModle();
-            infoModle.setName(edit_name.getText().toString());
-            infoModle.setIPAddress(edit_ipAddress.getText().toString());
-            infoModle.setPort(edit_port.getText().toString());
-            infoModle.setBackString(edit_backString.getText().toString());
+            CameraInfoModle infoModle = new CameraInfoModle(edit_name.getText().toString(),
+                    edit_ipAddress.getText().toString(),edit_port.getText().toString(),edit_backString.getText().toString());
             CameraManager.getInstance().with(this).using(cacheId).
-                    addDatas(new CameraModle(infoModle.getName(),infoModle.turnIntoUrl()));
+                    addDatas(infoModle);
             finish();
         }
     }

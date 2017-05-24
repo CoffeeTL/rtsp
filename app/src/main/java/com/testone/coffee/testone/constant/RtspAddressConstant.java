@@ -11,4 +11,8 @@ public class RtspAddressConstant {
 
     public static String address_example_three = "rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov";
     public static String address_example_four = "rtsp://rtsp-v3-spbtv.msk.spbtv.com/spbtv_v3_1/214_110.sdp";
+
+    public static String EMPTY_INFO = "有信息未填";
+    public static String WRONG_IP_ADDRESS = "您输入的ip地址格式不正确";
+
 }

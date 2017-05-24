@@ -12,6 +12,13 @@ public class CameraInfoModle {
     public String port;
     public String backString;
 
+    public CameraInfoModle(String name, String IPAddress, String port, String backString) {
+        this.name = name;
+        this.IPAddress = IPAddress;
+        this.port = port;
+        this.backString = backString;
+    }
+
     public String getName() {
         return name;
     }

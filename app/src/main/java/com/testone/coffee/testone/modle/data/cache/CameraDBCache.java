@@ -2,6 +2,7 @@ package com.testone.coffee.testone.modle.data.cache;
 
 import android.content.Context;
 
+import com.testone.coffee.testone.modle.CameraInfoModle;
 import com.testone.coffee.testone.modle.CameraModle;
 import com.testone.coffee.testone.modle.data.CameraInfoIml;
 import com.testone.coffee.testone.modle.data.cache.CameraCache;
@@ -18,13 +19,13 @@ public class CameraDBCache extends CameraCache {
         cameraInfoIml = new CameraInfoIml(context);
     }
     @Override
-    public void add(CameraModle modle) {
+    public void add(CameraInfoModle modle) {
         cameraInfoIml.add(modle);
     }
 
     @Override
-    public List<CameraModle> findAll() {
-        List<CameraModle> modleList = cameraInfoIml.findAll();
+    public List<CameraInfoModle> findAll() {
+        List<CameraInfoModle> modleList = cameraInfoIml.findAll();
         return modleList;
     }
 

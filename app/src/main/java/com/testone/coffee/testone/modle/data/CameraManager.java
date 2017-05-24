@@ -44,10 +44,10 @@ public class CameraManager {
         }
         return this;
     }
-    public List<CameraModle> getDatas(){
+    public List<CameraInfoModle> getDatas(){
        return cameraCache.findAll();
     }
-    public void addDatas(CameraModle infoModle){
+    public void addDatas(CameraInfoModle infoModle){
         cameraCache.add(infoModle);
     }
 

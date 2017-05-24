@@ -6,9 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +24,8 @@ import com.testone.coffee.testone.modle.CameraInfoModle;
 import com.testone.coffee.testone.modle.CameraModle;
 import com.testone.coffee.testone.modle.data.CameraManager;
 import com.testone.coffee.testone.utils.DensityUtil;
+import com.testone.coffee.testone.utils.TextSizeUtils;
+import com.testone.coffee.testone.view.adapter.CameraListAdapter;
 import com.testone.coffee.testone.view.ui.flowlayout.FlowLayout;
 import com.testone.coffee.testone.view.ui.flowlayout.TagAdapter;
 import com.testone.coffee.testone.view.ui.flowlayout.TagFlowLayout;
@@ -33,66 +40,48 @@ import java.util.List;
  */
 
 public class CameraListActivity extends BaseActivity implements View.OnClickListener{
-    private TextView btn_add;
-    private TextView btn_del;
-    private TextView btn_watch;
-    //@BindView(R.id.camera_list_activity_grid)GridView gridView;
-    //private CameraListAdapter listAdapter;
-    private TagFlowLayout flowLayout;
+    private GridView gridView;
+    private CameraListAdapter listAdapter;
+    private View add_camera_btn;
+    private View grid_room;
     private int current_index = -1;
-    private boolean isSelected;
-    private List<CameraModle> modleList;
+    private List<CameraInfoModle> modleList;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bindView();
-        btn_add.setOnClickListener(this);
-        btn_del.setOnClickListener(this);
-        btn_watch.setOnClickListener(this);
-        flowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+        initView();
+        initObject();
+        registerListener();
+
+    }
+
+    private void initView() {
+        TextSizeUtils.calculateTextSizeByDimension(this,
+                (TextView) findViewById(R.id.camera_list_activity_title),TextSizeUtils.DEFAULT_MAX_SIZE);
+
+    }
+
+    private void registerListener() {
+        add_camera_btn.setOnClickListener(this);
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onTagClick(View view, int position, FlowLayout parent) {
-                if(position == current_index){
-                    if(!isSelected){
-                        current_index = position;
-                        isSelected = true;
-                    }else{
-                        current_index = -1;
-                        isSelected = false;
-                    }
-                }else{
-                    current_index = position;
-                    isSelected = true;
-                }
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                current_index = position;
+                listAdapter.setLongClickposition(position);
+                listAdapter.notifyDataSetChanged();
                 return true;
             }
         });
-
-    }
-
-    private void bindView() {
-        btn_add = (TextView) findViewById(R.id.camera_list_activity_btnroom_addBtn);
-        btn_del = (TextView) findViewById(R.id.camera_list_activity_btnroom_delBtn);
-        btn_watch = (TextView) findViewById(R.id.camera_list_activity_btnroom_watchBtn);
-        flowLayout = (TagFlowLayout) findViewById(R.id.camera_list_activity_tagLayout);
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.camera_list_activity;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.camera_list_activity_btnroom_addBtn:
-                CameraAddActivity.startPage(this);
-                break;
-            case R.id.camera_list_activity_btnroom_delBtn:
-                if(current_index > -1){
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                if(-1 == current_index){
+                    CameraPlayActivity.startPage(CameraListActivity.this,position);
+                }else if(current_index == position){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(CameraListActivity.this);
                     dialog.setTitle(R.string.dialog_title);
-                    dialog.setMessage("确定要删除选中摄像头 "+modleList.get(current_index).getCamera_name()+" 吗?");
+                    dialog.setMessage("确定要删除摄像头 "+modleList.get(position).getName()+" 吗?");
                     dialog.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -103,55 +92,85 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            modleList.remove(current_index);
                             CameraManager.getInstance().with(CameraListActivity.this).
-                                    using(cacheId).deleteOne(modleList.get(current_index).getRtsp_url());
-                            refresh();
+                                    using(cacheId).deleteOne(modleList.get(position).turnIntoUrl());
+                            modleList.remove(position);
+                            backToNormal();
                         }
                     });
                     dialog.show();
-                }else{
-                    Toast.makeText(this,R.string.no_camera_hint,Toast.LENGTH_SHORT).show();
+                }else {
+                    backToNormal();
                 }
-
-                break;
-            case R.id.camera_list_activity_btnroom_watchBtn:
-                if(current_index > -1){
-                    CameraPlayActivity.startPage(this,current_index);
-                }else{
-                    Toast.makeText(this,R.string.no_camera_hint,Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
-    }
-
-    private void refresh() {
-        flowLayout.setAdapter(new TagAdapter<CameraModle>(modleList) {
+            }
+        });
+        grid_room.setOnClickListener(new View.OnClickListener() {
             @Override
-            public View getView(FlowLayout parent, int position, CameraModle s) {
-                View tv =  LayoutInflater.from(CameraListActivity.this)
-                        .inflate(R.layout.camera_list_item, flowLayout, false);
-                TextView name = (TextView) tv.findViewById(R.id.camera_list_item_name);
-                name.setText(modleList.get(position).getCamera_name());
-                LinearLayout main = (LinearLayout) tv.findViewById(R.id.camera_list_item_main);
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) main.getLayoutParams();
-                params.width = DensityUtil.getDeviceInfo(CameraListActivity.this)[0]/4;
-                params.height = DensityUtil.getDeviceInfo(CameraListActivity.this)[1]/4;
-                main.setLayoutParams(params);
-                return tv;
+            public void onClick(View v) {
+                if(-1 != current_index){
+                    backToNormal();
+                }
             }
         });
     }
+    private void backToNormal(){
+        current_index = -1;
+        listAdapter.setLongClickposition(current_index);
+        listAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if(current_index != -1){
+                backToNormal();
+            }else{
+                finish();
+            }
+        }
+        return true;
+    }
+
+    private void initObject() {
+        listAdapter = new CameraListAdapter(this);
+        gridView.setAdapter(listAdapter);
+        listAdapter.setLongClickposition(current_index);
+        listAdapter.notifyDataSetChanged();
+    }
+
+    private void bindView() {
+        gridView = (GridView) findViewById(R.id.camera_list_activity_grid);
+        add_camera_btn = findViewById(R.id.camera_list_activity_addroom);
+        grid_room = findViewById(R.id.camera_list_activity_gridroom);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.camera_list_activity;
+    }
+
+    @Override
+    public void onClick(View v) {
+       switch(v.getId()){
+           case R.id.camera_list_activity_addroom:
+               CameraAddActivity.startPage(this);
+               break;
+        }
+
+    }
+
+
 
     @Override
     protected void onResume() {
         super.onResume();
         modleList = CameraManager.getInstance().with(this).using(cacheId).getDatas();
         if(modleList !=null  && modleList.size() != 0){
-            for (CameraModle infoModle : modleList) {
-                Log.i("cameraInfo",infoModle.getRtsp_url());
+            for (CameraInfoModle infoModle : modleList) {
+                Log.i("cameraInfo",infoModle.turnIntoUrl());
             }
-            refresh();
+            listAdapter.setInfoModleList(modleList);
+            listAdapter.notifyDataSetChanged();
         }
     }
 }

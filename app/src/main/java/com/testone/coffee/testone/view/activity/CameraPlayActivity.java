@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,9 +22,11 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.testone.coffee.testone.R;
+import com.testone.coffee.testone.modle.CameraInfoModle;
 import com.testone.coffee.testone.modle.CameraModle;
 import com.testone.coffee.testone.modle.data.CameraManager;
 import com.testone.coffee.testone.utils.DensityUtil;
+import com.testone.coffee.testone.utils.TextSizeUtils;
 import com.testone.coffee.testone.utils.TimeUtils;
 
 import java.io.File;
@@ -47,7 +50,7 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
     private TextView switch_btn;
     private View main;
     private RelativeLayout.LayoutParams params;
-    private List<CameraModle> modleList;
+    private List<CameraInfoModle> modleList;
     private int current_index = 0;
     private int total_len;
     private boolean isBtnShow;
@@ -81,7 +84,7 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         bindView();
         registerListener();
         params = (RelativeLayout.LayoutParams) btnplate.getLayoutParams();
-        params.width = DensityUtil.getDeviceInfo(this)[0]/4;
+        params.width = DensityUtil.getDeviceInfo(this)[0]/5;
         params.height = DensityUtil.getDeviceInfo(this)[1]/2;
         btnplate.setLayoutParams(params);
         isBtnShow = true;
@@ -111,6 +114,11 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         record_btn = (TextView) findViewById(R.id.camera_play_activity_recordBtn);
         switch_btn = (TextView) findViewById(R.id.camera_play_activity_switchBtn);
         main = findViewById(R.id.camera_play_activity_main);
+        TextSizeUtils.calculateTextSizeByDimension(this,name_label,TextSizeUtils.DEFAULT_MIN_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,time_label,TextSizeUtils.DEFAULT_MIN_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,audio_btn,TextSizeUtils.DEFAULT_MIN_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,record_btn,TextSizeUtils.DEFAULT_MIN_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,switch_btn,TextSizeUtils.DEFAULT_MIN_SIZE);
     }
 
     private void registerListener() {
@@ -121,7 +129,7 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
     }
 
     private void startPlay(int current_index) {
-        name_label.setText(modleList.get(current_index).getCamera_name());
+        name_label.setText(modleList.get(current_index).getName());
         task = new TimerTask(){
             @Override
             public void run() {
@@ -139,7 +147,7 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
                 Log.i("************", "注册在媒体文件播放完毕时调用的回调函数。");
             }
         });
-        videoView.setVideoURI(Uri.parse(modleList.get(current_index).getRtsp_url()));
+        videoView.setVideoURI(Uri.parse(modleList.get(current_index).turnIntoUrl()));
         videoView.setMediaController(controll);
         videoView.requestFocus();
         videoView.start();
@@ -222,19 +230,15 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         }
         source_file = new File(record_path);
         mediaRecorder = new MediaRecorder();
-        mediaRecorder.setOrientationHint(90);
+        //mediaRecorder.setOrientationHint(90);
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION);
         mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
         mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mediaRecorder.setVideoSize(1080, 720);
+        mediaRecorder.setVideoSize(DensityUtil.getDeviceInfo(this)[0], DensityUtil.getDeviceInfo(this)[1]);
         mediaRecorder.setVideoFrameRate(3);
-        mediaRecorder.setVideoEncodingBitRate( 512 * 512);
-
-//        CamcorderProfile cpHigh = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
-//        mediaRecorder.setProfile(cpHigh);
-
+        mediaRecorder.setVideoEncodingBitRate( DensityUtil.getDeviceInfo(this)[0]*DensityUtil.getDeviceInfo(this)[1]);
         mediaRecorder.setOutputFile(source_file.getAbsolutePath());
         mediaRecorder.setPreviewDisplay(videoView.getHolder().getSurface());
         mediaRecorder.setMaxDuration(30000);
@@ -246,20 +250,10 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         }
         mediaRecorder.start();
     }
-//    setOutputFormat(profile.fileFormat);
-//        if (profile.quality >= CamcorderProfile.QUALITY_TIME_LAPSE_LOW &&
-//    profile.quality <= CamcorderProfile.QUALITY_TIME_LAPSE_QVGA) {
-//    } else {
-//        setAudioEncodingBitRate(profile.audioBitRate);
-//        setAudioChannels(profile.audioChannels);
-//        setAudioSamplingRate(profile.audioSampleRate);
-//    }
 
     private int current_audio;
     private void controlAudio() {
-        //当前音量
         current_audio = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        //最大音量
         int max =audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         if(current_audio > 0){
             current_audio = 0;
@@ -273,9 +267,25 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         }else {
             return;
         }
-
-            //audioManager.adjustVolume(i+volume,AudioManager.FLAG_PLAY_SOUND);
-
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mediaRecorder != null){
+            mediaRecorder.stop();
+            mediaRecorder.release();
+        }
+        if(videoView != null){
+            videoView.setVideoURI(null);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(videoView != null){
+            videoView.stopPlayback();
+        }
+    }
 }
