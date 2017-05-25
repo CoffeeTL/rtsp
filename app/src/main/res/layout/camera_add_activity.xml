@@ -95,6 +95,29 @@
                     android:layout_height="match_parent"/>
 
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/camera_add_activity_username_editLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/camera_add_activity_username_editLayout_label"
+                    style="@style/edit_text_label_style"
+                    android:text="@string/add_username_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <EditText
+                    android:id="@+id/camera_add_activity_username_editLayout_edit"
+                    android:textColor="@color/black_565656"
+                    android:textSize="17dp"
+                    android:hint="@string/add_edit_username_hint"
+                    android:maxLines="1"
+                    android:layout_marginLeft="9dp"
+                    android:layout_toRightOf="@+id/camera_add_activity_username_editLayout_label"
+                    android:layout_centerVertical="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
         <LinearLayout
@@ -146,6 +169,29 @@
                     android:layout_toRightOf="@+id/camera_add_activity_backString_editLayout_label"
                     android:layout_centerVertical="true"
                     android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/camera_add_activity_pwd_editLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/camera_add_activity_pwd_editLayout_label"
+                    style="@style/edit_text_label_style"
+                    android:text="@string/add_pwd_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <EditText
+                    android:id="@+id/camera_add_activity_pwd_editLayout_edit"
+                    android:textColor="@color/black_565656"
+                    android:textSize="17dp"
+                    android:hint="@string/add_edit_pwd_hint"
+                    android:maxLines="1"
+                    android:layout_marginLeft="9dp"
+                    android:layout_toRightOf="@+id/camera_add_activity_pwd_editLayout_label"
+                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 

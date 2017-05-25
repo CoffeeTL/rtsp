@@ -4,8 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.testone.coffee.testone.modle.CameraInfoModle;
-import com.testone.coffee.testone.modle.CameraModle;
-import com.testone.coffee.testone.modle.data.cache.CameraCache;
 import com.testone.coffee.testone.utils.PreferenceUtils;
 
 import java.util.ArrayList;
@@ -29,6 +27,8 @@ public class CameraSPCache extends CameraCache {
         PreferenceUtils.putString(context,num+"port",modle.getPort());
         PreferenceUtils.putString(context,num+"backString",modle.getBackString());
         PreferenceUtils.putString(context,num+"url",modle.turnIntoUrl());
+        PreferenceUtils.putString(context,num+"username",modle.getUsername());
+        PreferenceUtils.putString(context,num+"pwd",modle.getPwd());
         PreferenceUtils.putInt(context,"camera_num",num);
     }
 
@@ -42,7 +42,9 @@ public class CameraSPCache extends CameraCache {
                 String ip = PreferenceUtils.getString(context,i+"ip");
                 String port = PreferenceUtils.getString(context,i+"port");
                 String backString = PreferenceUtils.getString(context,i+"backString");
-                modleList.add(new CameraInfoModle(name,ip,port,backString));
+                String username = PreferenceUtils.getString(context,i+"username");
+                String pwd = PreferenceUtils.getString(context,i+"pwd");
+                modleList.add(new CameraInfoModle(name,ip,port,backString,username,pwd));
             }
         }
         return modleList;
@@ -65,6 +67,8 @@ public class CameraSPCache extends CameraCache {
             PreferenceUtils.putString(context,temp+"ip",modleList.get(i).getIPAddress());
             PreferenceUtils.putString(context,temp+"port",modleList.get(i).getPort());
             PreferenceUtils.putString(context,temp+"backString",modleList.get(i).getBackString());
+            PreferenceUtils.putString(context,temp+"username",modleList.get(i).getUsername());
+            PreferenceUtils.putString(context,temp+"pwd",modleList.get(i).getPwd());
             PreferenceUtils.putString(context,temp+"url",modleList.get(i).turnIntoUrl());
         }
     }

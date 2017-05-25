@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"/>
         <RelativeLayout
             android:id="@+id/camera_list_activity_addroom"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
             android:layout_width="60dp"
             android:layout_height="match_parent">
             <ImageView
@@ -45,6 +45,30 @@
             android:horizontalSpacing="9dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:id="@+id/camera_list_activity_emptyroom"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/camera_list_activity_emptyroom_iv"
+                android:src="@mipmap/empty_camera"
+                android:layout_centerHorizontal="true"
+                android:layout_width="200dp"
+                android:layout_height="200dp"/>
+            <TextView
+                android:id="@+id/camera_list_activity_emptyroom_tv"
+                android:textSize="18dp"
+                android:textColor="@color/gray_969696"
+                android:layout_below="@+id/camera_list_activity_emptyroom_iv"
+                android:layout_marginTop="9dp"
+                android:layout_centerHorizontal="true"
+                android:text="@string/empty_camera_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

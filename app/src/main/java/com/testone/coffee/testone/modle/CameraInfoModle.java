@@ -11,12 +11,16 @@ public class CameraInfoModle {
     public String IPAddress;
     public String port;
     public String backString;
+    public String username;
+    public String pwd;
 
-    public CameraInfoModle(String name, String IPAddress, String port, String backString) {
+    public CameraInfoModle(String name, String IPAddress, String port, String backString,String username,String pwd) {
         this.name = name;
         this.IPAddress = IPAddress;
         this.port = port;
         this.backString = backString;
+        this.username = username;
+        this.pwd = pwd;
     }
 
     public String getName() {
@@ -51,12 +55,36 @@ public class CameraInfoModle {
         this.backString = backString;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
     public String turnIntoUrl(){
-        if(TextUtils.equals("",getPort())){
-            return "rtsp://"+getIPAddress()+"/"+getBackString();
-        }else{
-            return "rtsp://"+getIPAddress()+":"+getPort()+"/"+getBackString();
+        String portPath = "";
+        if(!TextUtils.equals("",getPort())){
+            portPath += ":"+getPort();
         }
+        String usernamePath = "";
+        if(!TextUtils.equals("",getUsername())){
+            usernamePath += "/"+getUsername();
+        }
+        String pwdPath = "";
+        if(!TextUtils.equals("",getPwd())){
+            pwdPath += "/"+getPwd();
+        }
+        return "rtsp://"+getIPAddress()+portPath+usernamePath+pwdPath+"/"+getBackString();
 
     }
 }

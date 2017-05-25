@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.testone.coffee.testone.modle.CameraInfoModle;
-import com.testone.coffee.testone.modle.CameraModle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class CameraInfoIml {
     private static String TABLE_NAME = "camera.db";
-    private static int VERSION_CODE = 2;
+    private static int VERSION_CODE = 3;
     private Context context;
     private CameraInfoHelper helper;
     private SQLiteDatabase db;
@@ -32,6 +31,8 @@ public class CameraInfoIml {
         cv.put("ip",modle.getIPAddress());
         cv.put("port",modle.getPort());
         cv.put("backString",modle.getBackString());
+        cv.put("username",modle.getUsername());
+        cv.put("pwd",modle.getPwd());
         cv.put("url",modle.turnIntoUrl());
         db.insert("info",null,cv);
         db.close();
@@ -49,7 +50,9 @@ public class CameraInfoIml {
                     String ip = cursor.getString(cursor.getColumnIndexOrThrow("ip"));
                     String port = cursor.getString(cursor.getColumnIndexOrThrow("port"));
                     String backString = cursor.getString(cursor.getColumnIndexOrThrow("backString"));
-                    mlist.add(new CameraInfoModle(name,ip,port,backString));
+                    String username = cursor.getString(cursor.getColumnIndexOrThrow("username"));
+                    String pwd = cursor.getString(cursor.getColumnIndexOrThrow("pwd"));
+                    mlist.add(new CameraInfoModle(name,ip,port,backString,username,pwd));
                 }
             }
             db.close();

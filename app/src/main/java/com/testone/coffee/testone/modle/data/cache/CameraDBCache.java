@@ -3,9 +3,7 @@ package com.testone.coffee.testone.modle.data.cache;
 import android.content.Context;
 
 import com.testone.coffee.testone.modle.CameraInfoModle;
-import com.testone.coffee.testone.modle.CameraModle;
 import com.testone.coffee.testone.modle.data.CameraInfoIml;
-import com.testone.coffee.testone.modle.data.cache.CameraCache;
 
 import java.util.List;
 

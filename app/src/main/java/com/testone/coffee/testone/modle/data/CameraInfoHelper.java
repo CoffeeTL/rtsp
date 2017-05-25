@@ -16,7 +16,7 @@ public class CameraInfoHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table if not exists info(id integer primary key autoincrement,name text,ip text,port text,backString text,url text)");
+        db.execSQL("create table if not exists info(id integer primary key autoincrement,name text,ip text,port text,backString text,username text,pwd text,url text)");
     }
 
     @Override

@@ -91,7 +91,7 @@ public class TimeUtils {
 
 
     public static String getCurrentDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
         Date curDate = new Date(System.currentTimeMillis());
         String str = formatter.format(curDate);
         return str;

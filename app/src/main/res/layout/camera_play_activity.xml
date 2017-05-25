@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
                 android:id="@+id/camera_play_activity_main"
                 android:background="@color/black_565656"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <VideoView
-        android:id="@+id/camera_play_activity_videoView"
+
+    <TextureView
+        android:id="@+id/camera_play_activity_texture"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 
     <TextView
         android:id="@+id/camera_play_activity_nameLabel"
@@ -36,43 +39,111 @@
         android:paddingLeft="18dp"
         android:paddingRight="18dp"
         android:layout_height="wrap_content"/>
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/camera_play_activity_btnplate"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:background="@drawable/play_name_bacground"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/camera_play_activity_audioBtn"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:gravity="center"
-            android:text="@string/play_btn_audio"
-            android:layout_weight="1"
+        android:layout_height="match_parent">
+        <android.support.v4.widget.Space
+            android:id="@+id/camera_play_activity_btnplate_line"
+            android:layout_alignParentLeft="true"
+            android:background="@color/white"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"/>
+        <LinearLayout
+            android:id="@+id/camera_play_activity_btnroom"
+            android:layout_toRightOf="@+id/camera_play_activity_btnplate_line"
+            android:layout_marginLeft="1dp"
+            android:background="@drawable/play_name_bacground"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp"/>
-        <TextView
-            android:id="@+id/camera_play_activity_recordBtn"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:gravity="center"
-            android:text="@string/play_btn_record"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"/>
-        <TextView
-            android:id="@+id/camera_play_activity_switchBtn"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:gravity="center"
-            android:text="@string/play_btn_switch"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"/>
+            android:layout_height="match_parent">
+            <android.support.v7.widget.CardView
+                android:id="@+id/camera_play_activity_btnroom_captureroom"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/translucent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+                <TextView
+                    android:id="@+id/camera_play_activity_btnroom_captureroom_tv"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:layout_gravity="center"
+                    android:text="@string/play_capture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/camera_play_activity_btnroom_recordroom"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/translucent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+                <TextView
+                    android:id="@+id/camera_play_activity_btnroom_recordroom_tv"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:layout_gravity="center"
+                    android:text="@string/play_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/camera_play_activity_btnroom_lockroom"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/translucent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+                <TextView
+                    android:id="@+id/camera_play_activity_btnroom_lockroom_tv"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:layout_gravity="center"
+                    android:text="@string/play_lock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/camera_play_activity_btnroom_nextroom"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/translucent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+                <TextView
+                    android:id="@+id/camera_play_activity_btnroom_nextroom_tv"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:layout_gravity="center"
+                    android:text="@string/play_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/camera_play_activity_btnroom_playroom"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/translucent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+                <TextView
+                    android:id="@+id/camera_play_activity_btnroom_playroom_tv"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:layout_gravity="center"
+                    android:text="@string/play_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
 
 
 </RelativeLayout>

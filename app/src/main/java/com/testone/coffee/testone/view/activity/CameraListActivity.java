@@ -7,31 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.testone.coffee.testone.R;
-import com.testone.coffee.testone.RtspApplication;
 import com.testone.coffee.testone.modle.CameraInfoModle;
-import com.testone.coffee.testone.modle.CameraModle;
 import com.testone.coffee.testone.modle.data.CameraManager;
-import com.testone.coffee.testone.utils.DensityUtil;
 import com.testone.coffee.testone.utils.TextSizeUtils;
 import com.testone.coffee.testone.view.adapter.CameraListAdapter;
-import com.testone.coffee.testone.view.ui.flowlayout.FlowLayout;
-import com.testone.coffee.testone.view.ui.flowlayout.TagAdapter;
-import com.testone.coffee.testone.view.ui.flowlayout.TagFlowLayout;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,6 +31,7 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
     private CameraListAdapter listAdapter;
     private View add_camera_btn;
     private View grid_room;
+    private View empty_room;
     private int current_index = -1;
     private List<CameraInfoModle> modleList;
     @Override
@@ -59,7 +47,6 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
     private void initView() {
         TextSizeUtils.calculateTextSizeByDimension(this,
                 (TextView) findViewById(R.id.camera_list_activity_title),TextSizeUtils.DEFAULT_MAX_SIZE);
-
     }
 
     private void registerListener() {
@@ -142,6 +129,7 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
         gridView = (GridView) findViewById(R.id.camera_list_activity_grid);
         add_camera_btn = findViewById(R.id.camera_list_activity_addroom);
         grid_room = findViewById(R.id.camera_list_activity_gridroom);
+        empty_room = findViewById(R.id.camera_list_activity_emptyroom);
     }
 
     @Override
@@ -169,8 +157,21 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
             for (CameraInfoModle infoModle : modleList) {
                 Log.i("cameraInfo",infoModle.turnIntoUrl());
             }
+            if(gridView.getVisibility() == View.GONE){
+                gridView.setVisibility(View.VISIBLE);
+            }
+            if(empty_room.getVisibility() == View.VISIBLE){
+                empty_room.setVisibility(View.GONE);
+            }
             listAdapter.setInfoModleList(modleList);
             listAdapter.notifyDataSetChanged();
+        }else{
+            if(gridView.getVisibility() == View.VISIBLE){
+                gridView.setVisibility(View.GONE);
+            }
+            if(empty_room.getVisibility() == View.GONE){
+                empty_room.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

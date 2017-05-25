@@ -1,7 +1,6 @@
 package com.testone.coffee.testone.modle.data.cache;
 
 import com.testone.coffee.testone.modle.CameraInfoModle;
-import com.testone.coffee.testone.modle.CameraModle;
 
 import java.util.List;
 
