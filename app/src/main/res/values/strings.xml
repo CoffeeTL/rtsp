@@ -5,12 +5,12 @@
     <string name="btn_watch">监视</string>
     <string name="btn_save">保存</string>
     <string name="btn_cancel">取消</string>
-    <string name="add_name_label">名称:</string>
+    <string name="add_name_label">名\t称:</string>
     <string name="add_IP_label">IP地址:</string>
-    <string name="add_port_label">端口:</string>
+    <string name="add_port_label">端\t口:</string>
     <string name="add_username_label">用户名:</string>
-    <string name="add_pwd_label">密码:</string>
-    <string name="add_backstring_label">后缀:\t</string>
+    <string name="add_pwd_label">密\t码:</string>
+    <string name="add_backstring_label">后\t缀:</string>
     <string name="add_edit_name_hint">例:电梯右上角</string>
     <string name="add_edit_ip_hint">例：192.168.1.217</string>
     <string name="add_edit_port_hint">例:554</string>
@@ -42,5 +42,6 @@
     <string name="play_next">下一个</string>
     <string name="play_start">播放</string>
     <string name="play_stop">暂停</string>
+    <string name="play_back">返回</string>
 
 </resources>

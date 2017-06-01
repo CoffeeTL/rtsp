@@ -39,7 +39,7 @@ public class LoadingDialog extends Dialog {
         lp.width = DensityUtil.dip2px(context,100);
         lp.height = DensityUtil.dip2px(context,100);
         dialogWindow.setAttributes(lp);
-        setCanceledOnTouchOutside(false);
+        setCanceledOnTouchOutside(true);
         //setCancelable(false);
     }
 }

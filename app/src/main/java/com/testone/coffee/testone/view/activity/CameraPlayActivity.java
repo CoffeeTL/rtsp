@@ -1,40 +1,42 @@
 package com.testone.coffee.testone.view.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
-import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.testone.coffee.testone.R;
 import com.testone.coffee.testone.modle.CameraInfoModle;
 import com.testone.coffee.testone.modle.data.CameraManager;
+import com.testone.coffee.testone.modle.data.ScreenShotManager;
 import com.testone.coffee.testone.utils.DensityUtil;
 import com.testone.coffee.testone.utils.TextSizeUtils;
 import com.testone.coffee.testone.utils.TimeUtils;
 import com.testone.coffee.testone.view.ui.LoadingDialog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -51,7 +53,7 @@ import java.util.TimerTask;
  * Created by coffee on 2017/5/16.
  */
 
-public class CameraPlayActivity extends BaseActivity implements View.OnClickListener,TextureView.SurfaceTextureListener {
+public class CameraPlayActivity extends BaseActivity implements View.OnClickListener,TextureView.SurfaceTextureListener{
     private TextureView textureView;
     private MediaPlayer mediaPlayer;
     private TextView name_label;
@@ -60,12 +62,12 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
     private CardView card_record_room;
     private CardView card_lock_room;
     private CardView card_next_room;
-    private CardView card_play_room;
+    private CardView card_back_room;
     private TextView card_capture_tv;
     private TextView card_record_tv;
     private TextView card_lock_tv;
     private TextView card_next_tv;
-    private TextView card_play_tv;
+    private TextView card_back_tv;
     private RelativeLayout btnplate;
     private View main;
     private RelativeLayout.LayoutParams params;
@@ -73,10 +75,8 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
     private int current_index = 0;
     private int total_len;
     private boolean isBtnShow;
-    private MediaRecorder mediaRecorder;
-    private String record_path = Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+System.currentTimeMillis()+".mp4";
     private File source_file;
-    private boolean isRecording;
+    private static final String TAG = "prepared";
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -91,11 +91,26 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
     private Timer timer;
     private TimerTask task;
     private LoadingDialog loadingDialog;
+    private MediaRecorder mediaRecorder;
 
     public static void startPage(Context context,int current_index){
         Intent intent = new Intent(context,CameraPlayActivity.class);
         intent.putExtra("index",current_index);
         context.startActivity(intent);
+    }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && Build.VERSION.SDK_INT >= 19) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,7 +137,6 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         };
         timer.schedule(task,1000,1000);
         if(modleList != null && modleList.size() != 0){
-            //startPlay(current_index);
             textureView.setSurfaceTextureListener(this);
         }
     }
@@ -130,10 +144,9 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
     private void initView() {
         params = (RelativeLayout.LayoutParams) btnplate.getLayoutParams();
         params.width = DensityUtil.getDeviceInfo(this)[0]/5;
-        params.height = DensityUtil.getDeviceInfo(this)[1];
         btnplate.setLayoutParams(params);
-        card_play_tv.setText(R.string.play_stop);
         loadingDialog = new LoadingDialog(this);
+        card_lock_tv.setTextColor(0xffcccccc);
     }
 
     private void bindView() {
@@ -145,12 +158,12 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         card_record_room = (CardView) findViewById(R.id.camera_play_activity_btnroom_recordroom);
         card_lock_room = (CardView) findViewById(R.id.camera_play_activity_btnroom_lockroom);
         card_next_room = (CardView) findViewById(R.id.camera_play_activity_btnroom_nextroom);
-        card_play_room = (CardView) findViewById(R.id.camera_play_activity_btnroom_playroom);
+        card_back_room = (CardView) findViewById(R.id.camera_play_activity_btnroom_backroom);
         card_capture_tv = (TextView) findViewById(R.id.camera_play_activity_btnroom_captureroom_tv);
         card_record_tv = (TextView) findViewById(R.id.camera_play_activity_btnroom_recordroom_tv);
         card_lock_tv = (TextView) findViewById(R.id.camera_play_activity_btnroom_lockroom_tv);
         card_next_tv = (TextView) findViewById(R.id.camera_play_activity_btnroom_nextroom_tv);
-        card_play_tv = (TextView) findViewById(R.id.camera_play_activity_btnroom_playroom_tv);
+        card_back_tv = (TextView) findViewById(R.id.camera_play_activity_btnroom_backroom_tv);
         main = findViewById(R.id.camera_play_activity_main);
         TextSizeUtils.calculateTextSizeByDimension(this,name_label,TextSizeUtils.DEFAULT_MIN_SIZE);
         TextSizeUtils.calculateTextSizeByDimension(this,time_label,TextSizeUtils.DEFAULT_MIN_SIZE);
@@ -158,7 +171,7 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         TextSizeUtils.calculateTextSizeByDimension(this,card_record_tv,TextSizeUtils.DEFAULT_MIN_SIZE);
         TextSizeUtils.calculateTextSizeByDimension(this,card_lock_tv,TextSizeUtils.DEFAULT_MIN_SIZE);
         TextSizeUtils.calculateTextSizeByDimension(this,card_next_tv,TextSizeUtils.DEFAULT_MIN_SIZE);
-        TextSizeUtils.calculateTextSizeByDimension(this,card_play_tv,TextSizeUtils.DEFAULT_MIN_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,card_back_tv,TextSizeUtils.DEFAULT_MIN_SIZE);
     }
 
     private void registerListener() {
@@ -166,7 +179,7 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         card_record_room.setOnClickListener(this);
         card_lock_room.setOnClickListener(this);
         card_next_room.setOnClickListener(this);
-        card_play_room.setOnClickListener(this);
+        card_back_room.setOnClickListener(this);
         main.setOnClickListener(this);
     }
 
@@ -174,7 +187,7 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
     public int getLayoutId() {
         return R.layout.camera_play_activity;
     }
-
+    private boolean isRecording;
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -190,20 +203,17 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
                     isRecording = false;
                     stopRecord();
                     card_record_tv.setText(R.string.play_btn_record);
-                    Toast.makeText(this,"录像已经存储到了"+source_file.getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                    if(source_file.exists()){
+                        Toast.makeText(this,"录像已经存储到了"+source_file.getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
             case R.id.camera_play_activity_btnroom_nextroom:
-                //videoView.stopPlayback();
                 current_index ++;
                 if(current_index >= total_len){
                     current_index = 0;
                 }
                 loadingDialog.show();
-                if(mediaPlayer != null){
-                    mediaPlayer.stop();
-                    mediaPlayer .reset();
-                }
                 mSurface = new Surface(textureView.getSurfaceTexture());
                 playVideo(current_index);
                 break;
@@ -234,107 +244,103 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.camera_play_activity_btnroom_lockroom:
                 break;
-            case R.id.camera_play_activity_btnroom_playroom:
-                if(mediaPlayer.isPlaying()){
-                    card_play_tv.setText(R.string.play_start);
-                    mediaPlayer.pause();
-                }else{
-                    card_play_tv.setText(R.string.play_stop);
-                    mediaPlayer.start();
-                }
+            case R.id.camera_play_activity_btnroom_backroom:
+                finish();
                 break;
         }
     }
-    private Thread capture_thread;
-    private boolean is_Captured;
-    private void captureCurrentShotAndSave() {
-        is_Captured = false;
-        Log.i("prepared","start capture");
-        final String mPath = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+TimeUtils.getCurrentDate() + ".png";
-        Log.i("prepared","Capturing Screenshot: " + mPath);
-        capture_thread = new Thread(new Runnable() {
+
+    private void stopRecord() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                if(!is_Captured){
-                    Bitmap bm = textureView.getBitmap();
-                    if(bm == null)
-                        Log.i("prepared","bitmap is null");
-                    OutputStream fout = null;
-                    File imageFile = new File(mPath);
-                    try {
-                        fout = new FileOutputStream(imageFile);
-                        if(bm.compress(Bitmap.CompressFormat.PNG, 90, fout)){
-
-                            is_Captured = true;
-                        }
-                        fout.flush();
-                        fout.close();
-                    } catch (FileNotFoundException e) {
-                        Log.e("prepared", "FileNotFoundException");
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        Log.e("prepared", "IOException");
-                        e.printStackTrace();
-                    }
+                try {
+                    Log.i(TAG,"step1");
+                    mediaRecorder.setOnErrorListener(null);
+                    mediaRecorder.setOnInfoListener(null);
+                    mediaRecorder.setPreviewDisplay(null);
+                    Log.i(TAG,"step2");
+                    mediaRecorder.stop();
+                } catch (IllegalStateException e) {
+                    Log.i(TAG, Log.getStackTraceString(e));
+                }catch (RuntimeException e) {
+                    Log.i(TAG, Log.getStackTraceString(e));
+                }catch (Exception e) {
+                    Log.i(TAG, Log.getStackTraceString(e));
                 }
+                mediaRecorder.release();
+                mediaRecorder = null;
             }
-        });
-        capture_thread.start();
+        }).start();
+
+    }
+    private void doRecord() {
+        if(mediaRecorder == null){
+            mediaRecorder = new MediaRecorder();
+        }
+        try {
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC_ELD);
+            mediaRecorder.setPreviewDisplay(new Surface(textureView.getSurfaceTexture()));
+            mediaRecorder.setVideoSize(textureView.getWidth(),textureView.getHeight());
+            mediaRecorder.setVideoEncodingBitRate( 512*512);
+            mediaRecorder.setVideoFrameRate(15);
+            mediaRecorder.setOrientationHint(90);
+            mediaRecorder.setMaxDuration(40 * 1000);
+            mediaRecorder.setMaxFileSize(5000000);
+
+
+            String sdPath = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+TimeUtils.getCurrentDate()+".mp4";
+            if (sdPath != null) {
+                source_file = new File(sdPath);
+                mediaRecorder.setOutputFile(source_file.getAbsolutePath());
+                mediaRecorder.prepare();
+                mediaRecorder.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void captureCurrentShotAndSave() {
+        final String mPath = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+TimeUtils.getCurrentDate() + ".png";
+        Bitmap bm = textureView.getBitmap();
+        if(bm == null){
+            Log.i("prepared","bitmap is null");
+        }else{
+            ScreenShotManager.get().with(this).putData(bm,modleList.get(current_index).getName());
+        }
+        OutputStream fout = null;
+        File imageFile = new File(mPath);
+        try {
+            fout = new FileOutputStream(imageFile);
+            bm.compress(Bitmap.CompressFormat.PNG, 90, fout);
+            fout.flush();
+            fout.close();
+        } catch (FileNotFoundException e) {
+            Log.e("prepared", "FileNotFoundException");
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e("prepared", "IOException");
+            e.printStackTrace();
+        }
         Toast.makeText(getApplicationContext(), "截图成功,已保存至 " + mPath, Toast.LENGTH_SHORT).show();
     }
 
 
-    private void stopRecord() {
-        if(source_file != null && source_file.exists()){
-            mediaRecorder.stop();
-            mediaRecorder.release();
-            mediaRecorder = null;
-        }
-    }
-
-    private void doRecord() {
-        if(mediaRecorder != null){
-            mediaRecorder.stop();
-            mediaRecorder.release();
-            mediaRecorder = null;
-        }
-        source_file = new File(record_path);
-        mediaRecorder = new MediaRecorder();
-        //mediaRecorder.setOrientationHint(90);
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION);
-        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mediaRecorder.setVideoSize(DensityUtil.getDeviceInfo(this)[0], DensityUtil.getDeviceInfo(this)[1]);
-        mediaRecorder.setVideoFrameRate(3);
-        mediaRecorder.setVideoEncodingBitRate( DensityUtil.getDeviceInfo(this)[0]*DensityUtil.getDeviceInfo(this)[1]);
-        mediaRecorder.setOutputFile(source_file.getAbsolutePath());
-        mediaRecorder.setPreviewDisplay(mSurface);
-        mediaRecorder.setMaxDuration(30000);
-        mediaRecorder.setMaxFileSize(30000000);
-        try {
-            mediaRecorder.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mediaRecorder.start();
-    }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(mediaRecorder != null){
-            mediaRecorder.stop();
-            mediaRecorder.release();
-        }
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
     private Surface mSurface;
     @Override
@@ -349,11 +355,15 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                if(mediaPlayer != null){
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                }
                 try {
                     mediaPlayer = new MediaPlayer();
                     mediaPlayer.setDataSource(modleList.get(current).turnIntoUrl());
                     mediaPlayer.setSurface(mSurface);
-                    mediaPlayer.prepare();
+                    mediaPlayer.prepareAsync();
                     mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
@@ -389,4 +399,5 @@ public class CameraPlayActivity extends BaseActivity implements View.OnClickList
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
     }
+
 }

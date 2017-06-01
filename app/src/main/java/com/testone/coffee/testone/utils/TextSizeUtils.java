@@ -14,9 +14,9 @@ import com.testone.coffee.testone.view.activity.CameraAddActivity;
  */
 
 public class TextSizeUtils {
-    public static int DEFAULT_MAX_SIZE = 6;
-    public static int DEFAULT_MEDIUM_SIZE = 5;
-    public static int DEFAULT_MIN_SIZE = 4;
+    public static int DEFAULT_MAX_SIZE = 7;
+    public static int DEFAULT_MEDIUM_SIZE = 6;
+    public static int DEFAULT_MIN_SIZE = 5;
     public static void calculateTextSizeByDimension(Context context,TextView tv, int type){
 //        DisplayMetrics dm = context.getResources().getDisplayMetrics();
 //        int textSize = (int) (dm.density * type);

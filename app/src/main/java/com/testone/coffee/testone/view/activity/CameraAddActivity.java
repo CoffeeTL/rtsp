@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +31,7 @@ import java.util.List;
  * Created by coffee on 2017/5/16.
  */
 
-public class CameraAddActivity extends BaseActivity implements View.OnClickListener{
+public class CameraAddActivity extends BaseActivity implements View.OnClickListener,TextView.OnEditorActionListener{
     private static int MARGIN_DIP = 10;
     private EditText edit_name;
     private EditText edit_ipAddress;
@@ -63,6 +67,12 @@ public class CameraAddActivity extends BaseActivity implements View.OnClickListe
         setParams();
         back_btn.setOnClickListener(this);
         save_btn.setOnClickListener(this);
+        edit_name.setOnEditorActionListener(this);
+        edit_ipAddress.setOnEditorActionListener(this);
+        edit_port.setOnEditorActionListener(this);
+        edit_backString.setOnEditorActionListener(this);
+        edit_username.setOnEditorActionListener(this);
+        edit_pwd.setOnEditorActionListener(this);
     }
 
     private void initView() {
@@ -82,12 +92,12 @@ public class CameraAddActivity extends BaseActivity implements View.OnClickListe
                 (TextView) findViewById(R.id.camera_add_activity_pwd_editLayout_label),TextSizeUtils.DEFAULT_MEDIUM_SIZE);
         TextSizeUtils.calculateTextSizeByDimension(this,save_btn,TextSizeUtils.DEFAULT_MEDIUM_SIZE);
 
-        TextSizeUtils.calculateTextSizeByDimension(this,edit_name,TextSizeUtils.DEFAULT_MIN_SIZE);
-        TextSizeUtils.calculateTextSizeByDimension(this,edit_ipAddress,TextSizeUtils.DEFAULT_MIN_SIZE);
-        TextSizeUtils.calculateTextSizeByDimension(this,edit_port,TextSizeUtils.DEFAULT_MIN_SIZE);
-        TextSizeUtils.calculateTextSizeByDimension(this,edit_backString,TextSizeUtils.DEFAULT_MIN_SIZE);
-        TextSizeUtils.calculateTextSizeByDimension(this,edit_username,TextSizeUtils.DEFAULT_MIN_SIZE);
-        TextSizeUtils.calculateTextSizeByDimension(this,edit_pwd,TextSizeUtils.DEFAULT_MIN_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,edit_name,TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,edit_ipAddress,TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,edit_port,TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,edit_backString,TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,edit_username,TextSizeUtils.DEFAULT_MEDIUM_SIZE);
+        TextSizeUtils.calculateTextSizeByDimension(this,edit_pwd,TextSizeUtils.DEFAULT_MEDIUM_SIZE);
     }
 
     private int screenWidth;
@@ -172,5 +182,45 @@ public class CameraAddActivity extends BaseActivity implements View.OnClickListe
                     addDatas(infoModle);
             finish();
         }
+    }
+
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        Log.i("prepared",actionId+"actionId");
+
+        if(  actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE ){
+            switch(v.getId()){
+                case R.id.camera_add_activity_name_editLayout_edit:
+                    Log.i("prepared","name_editLayout_edit");
+                    edit_ipAddress.requestFocus();
+                    break;
+                case R.id.camera_add_activity_ip_editLayout_edit:
+                    Log.i("prepared","ip_editLayout_edit");
+                    edit_port.requestFocus();
+                    break;
+                case R.id.camera_add_activity_port_editLayout_edit:
+                    Log.i("prepared","port_editLayout_edit");
+                    edit_backString.requestFocus();
+                    break;
+                case R.id.camera_add_activity_backString_editLayout_edit:
+                    Log.i("prepared","backstring_editLayout_edit");
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(edit_backString,InputMethodManager.SHOW_FORCED);
+                    imm.hideSoftInputFromWindow(edit_backString.getWindowToken(), 0);
+                    break;
+                case R.id.camera_add_activity_username_editLayout_edit:
+                    Log.i("prepared","username_editLayout_edit");
+                    edit_pwd.requestFocus();
+                    break;
+                case R.id.camera_add_activity_pwd_editLayout_edit:
+                    Log.i("prepared","pwd_editLayout_edit");
+                    InputMethodManager imm2 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm2.showSoftInput(edit_pwd,InputMethodManager.SHOW_FORCED);
+                    imm2.hideSoftInputFromWindow(edit_pwd.getWindowToken(), 0);
+                    break;
+            }
+        }
+        return false;
     }
 }

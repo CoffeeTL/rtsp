@@ -9,12 +9,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
 import com.testone.coffee.testone.R;
 import com.testone.coffee.testone.modle.CameraInfoModle;
+import com.testone.coffee.testone.modle.ScreenShotModle;
 import com.testone.coffee.testone.modle.data.CameraManager;
+import com.testone.coffee.testone.modle.data.ScreenShotManager;
 import com.testone.coffee.testone.utils.TextSizeUtils;
 import com.testone.coffee.testone.view.adapter.CameraListAdapter;
 
@@ -64,7 +67,9 @@ public class CameraListActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 if(-1 == current_index){
-                    CameraPlayActivity.startPage(CameraListActivity.this,position);
+                    //CameraPlayActivity.startPage(CameraListActivity.this,position);
+                    //CameraSurfaceActivity.startPage(CameraListActivity.this,position);
+                    CameraVlcActivity.startPage(CameraListActivity.this,position);
                 }else if(current_index == position){
                     AlertDialog.Builder dialog = new AlertDialog.Builder(CameraListActivity.this);
                     dialog.setTitle(R.string.dialog_title);
