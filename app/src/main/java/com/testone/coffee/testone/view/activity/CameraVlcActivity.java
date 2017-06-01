@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -327,11 +328,14 @@ public class CameraVlcActivity extends BaseActivity  implements SurfaceHolder.Ca
         mSurfaceView.invalidate();
     }
 
+    private String sdPath = "";
+    private boolean isRecording;
+    private int index = 1;
     @Override
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.camera_vlc_activity_btnroom_captureroom:
-                String mPath = modleList.get(current_index).getName()+"_"+Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+TimeUtils.getCurrentDate() + ".png";
+                String mPath = Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+TimeUtils.getCurrentDate()+"_"+modleList.get(current_index).getName() + ".png";
                 if(mMediaPlayer.takeSnapShot(mPath,DensityUtil.getDeviceInfo(this)[0],DensityUtil.getDeviceInfo(this)[1])){
                     Toast.makeText(this,"截图已经成功保存在"+mPath,Toast.LENGTH_SHORT).show();
                 }else{
@@ -339,19 +343,21 @@ public class CameraVlcActivity extends BaseActivity  implements SurfaceHolder.Ca
                 }
                 break;
             case R.id.camera_vlc_activity_btnroom_recordroom:
-                String sdPath = modleList.get(current_index).getName()+"_"+Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+TimeUtils.getCurrentDate();
+                if(TextUtils.equals("",sdPath)){
+                    sdPath += Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+TimeUtils.getCurrentDate()+"_"+modleList.get(current_index).getName();
+                }
                 if(mMediaPlayer.videoIsRecording()){
                     if(mMediaPlayer.videoRecordStop()){
                         card_record_tv.setText(R.string.play_btn_record);
                         Toast.makeText(this,"录像已经保存在"+sdPath,Toast.LENGTH_SHORT).show();
-                    }else{
-                        card_record_tv.setText(R.string.stop_btn_record);
+                        sdPath = "";
                     }
                 }else{
-                    if(mMediaPlayer.videoRecordStart(sdPath)){
+                    if(mMediaPlayer.videoRecordStart(sdPath) && index == 2){
                         card_record_tv.setText(R.string.stop_btn_record);
-                    }else{
-                        card_record_tv.setText(R.string.play_btn_record);
+                    }
+                    if(2 != index){
+                        index ++;
                     }
                 }
                 break;
